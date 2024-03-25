@@ -1,0 +1,27 @@
+version: "3"
+networks:
+  infra_default:
+    external: true
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:16.7.6-ce.0
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url = "${X_GITLAB_EXTERNAL_URL:-http://lab.m0d1.com}"
+        gitlab_rails['gitlab_shell_ssh_port'] = ${X_GITLAB_SSH_PORT:-2222}
+        letsencrypt['enabled'] = false
+      GITLAB_LOG_LEVEL: warn
+    hostname: ${X_GITLAB_HOSTNAME}
+    networks:
+      - infra_default
+    ports:
+      - 2222:22
+    restart: unless-stopped
+    shm_size: 128mb
+    volumes:
+      - ./config:/etc/gitlab
+      - ./logs:/var/log/gitlab
+      - ./data:/var/opt/gitlab
+    logging:
+      options:
+        max-size: 1g
