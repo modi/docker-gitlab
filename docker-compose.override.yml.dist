@@ -1,0 +1,10 @@
+networks:
+  infra_default:
+    external: true
+services:
+  gitlab:
+    networks:
+      - infra_default
+    ports:
+      - ${X_GITLAB_WEB_PORT:-80}:80
+      - ${X_GITLAB_SSH_PORT:-2222}:22
