@@ -1,6 +1,6 @@
 services:
   gitlab:
-    image: gitlab/gitlab-ce:${X_GITLAB_VERSION:-18.6.2}-ce.0
+    image: gitlab/gitlab-ce:${X_GITLAB_VERSION:-18.8.4}-ce.0
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url "${X_GITLAB_EXTERNAL_URL:-http://gitlab.example.com}"

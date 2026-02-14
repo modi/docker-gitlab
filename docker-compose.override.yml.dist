@@ -1,10 +1,27 @@
-networks:
-  infra_default:
-    external: true
+#networks:
+#  traefik:
+#    name: infra_default
+#    external: true
 services:
   gitlab:
-    networks:
-      - infra_default
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "${X_GITLAB_EXTERNAL_URL:-http://gitlab.example.com}"
+        gitlab_rails['gitlab_shell_ssh_port'] = ${X_GITLAB_SSH_PORT:-2222}
+        letsencrypt['enabled'] = false
+#        nginx['redirect_http_to_https'] = true
+#        nginx['ssl_certificate'] = "/etc/gitlab/ssl/fullchain.pem"
+#        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/privkey.pem"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.gitlab.entrypoints=https"
+#      - "traefik.http.routers.gitlab.rule=Host(`${X_GITLAB_HOSTNAME}`)"
+#      - "traefik.http.services.gitlab.loadbalancer.server.port=443"
+#    networks:
+#      - traefik
     ports:
       - ${X_GITLAB_WEB_PORT:-80}:80
+      - 443:443
       - ${X_GITLAB_SSH_PORT:-2222}:22
+#    volumes:
+#      - ./ssl:/etc/gitlab/ssl
